@@ -60,7 +60,10 @@ contract LicenseToken is ERC721, Ownable, ReentrancyGuard {
 
     modifier onlyCopyrightOwner(uint256 tokenId) {
         require(
-            IERC721(copyrightTokenContract).ownerOf(tokenId) == msg.sender,
+            IERC721(copyrightTokenContract).ownerOf(tokenId) == getTokenBoundAccountAddress(
+                tokenId,
+                creatorTokenContract
+            ),
             "Only the owner of the token can call this function"
         );
         _;
