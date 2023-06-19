@@ -51,10 +51,12 @@ contract CopyrightToken is ERC721, Ownable, ReentrancyGuard {
 
     function initContracts(
         address _factoryContract,
-        address _implementationContract
+        address _implementationContract,
+        address _creatorTokenContract
     ) external onlyOwner {
         factoryContract = _factoryContract;
         implementationContract = _implementationContract;
+        creatorTokenContract = _creatorTokenContract;
     }
 
     modifier onlyCreatorTokenOwner(uint256 tokenId) {
