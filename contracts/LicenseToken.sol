@@ -20,7 +20,7 @@ contract LicenseToken is ERC721, Ownable, ReentrancyGuard {
     function mint(
         uint256 creatorId,
         uint256 copyrightId
-    ) public onlyCreatorTokenOwner(creatorId) onlyCopyrightOwner(copyrightId) {
+    ) public onlyCreatorTokenOwner(creatorId) onlyCopyrightOwner(creatorId, copyrightId) {
 
         address copyrightTokenAccount = getTokenBoundAccountAddress(
             copyrightId,
@@ -58,10 +58,10 @@ contract LicenseToken is ERC721, Ownable, ReentrancyGuard {
         copyrightTokenContract =  _copyrightTokenContract;
     }
 
-    modifier onlyCopyrightOwner(uint256 tokenId) {
+    modifier onlyCopyrightOwner(uint256 creatorId, uint256 tokenId) {
         require(
             IERC721(copyrightTokenContract).ownerOf(tokenId) == getTokenBoundAccountAddress(
-                tokenId,
+                creatorId,
                 creatorTokenContract
             ),
             "Only the owner of the token can call this function"
