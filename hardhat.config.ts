@@ -1,6 +1,6 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
-import 'dotenv/config'
+import "dotenv/config"
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const ALCHEMY_ID = process.env.ALCHEMY_ID;
@@ -43,7 +43,17 @@ const config: HardhatUserConfig = {
         apiKey: {
             polygonMumbai: POLYGONSCAN_API_KEY ? POLYGONSCAN_API_KEY : "",
             astar: ASTARSCAN_API_KEY ? ASTARSCAN_API_KEY : "",
-        }
+        },
+        customChains: [
+            {
+              network: "astar",
+              chainId: 592,
+              urls: {
+                apiURL: "https://evm.astar.network",
+                browserURL: "https://blockscout.com/astar/",
+              }
+            }
+        ]
     },
 
 };
