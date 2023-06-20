@@ -25,7 +25,6 @@ const config: HardhatUserConfig = {
             allowUnlimitedContractSize: true,
             forking: {
                 url: `https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_ID}`
-                // blockNumber: 7704180
             },
         },
         astar: {
