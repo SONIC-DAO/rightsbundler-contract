@@ -49,7 +49,7 @@ const config: HardhatUserConfig = {
               network: "astar",
               chainId: 592,
               urls: {
-                apiURL: "https://evm.astar.network",
+                apiURL: "https://blockscout.com/astar/api",
                 browserURL: "https://blockscout.com/astar/",
               }
             }
