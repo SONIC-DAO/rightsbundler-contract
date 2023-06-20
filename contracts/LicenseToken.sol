@@ -4,7 +4,7 @@ pragma solidity ^0.8.18;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
 import "./interfaces/IERC6551Registry.sol";
 
 contract LicenseToken is ERC721, Ownable, ReentrancyGuard {
@@ -15,19 +15,42 @@ contract LicenseToken is ERC721, Ownable, ReentrancyGuard {
     address public copyrightTokenContract;
     address public creatorTokenContract;
 
+    struct License {
+        string name;
+        string desciption;
+        string detailUrl;
+        string imageUrl;
+    }
+
+    mapping(uint256 => License) public licenses;
+
     constructor() ERC721("LicenseToken", "CT") {}
 
     function mint(
         uint256 creatorId,
-        uint256 copyrightId
-    ) public onlyCreatorTokenOwner(creatorId) onlyCopyrightOwner(creatorId, copyrightId) {
-
+        uint256 copyrightId,
+        string memory _name,
+        string memory _desciption,
+        string memory _detailUrl,
+        string memory _imageUrl
+    )
+        public
+        onlyCreatorTokenOwner(creatorId)
+        onlyCopyrightOwner(creatorId, copyrightId)
+    {
         address copyrightTokenAccount = getTokenBoundAccountAddress(
             copyrightId,
             copyrightTokenContract
         );
 
-        _mint(copyrightTokenAccount, totalSupply);        
+        _mint(copyrightTokenAccount, totalSupply);
+
+        licenses[totalSupply] = License(
+            _name,
+            _desciption,
+            _detailUrl,
+            _imageUrl
+        );
 
         totalSupply++;
     }
@@ -55,15 +78,13 @@ contract LicenseToken is ERC721, Ownable, ReentrancyGuard {
         factoryContract = _factoryContract;
         implementationContract = _implementationContract;
         creatorTokenContract = _creatorTokenContract;
-        copyrightTokenContract =  _copyrightTokenContract;
+        copyrightTokenContract = _copyrightTokenContract;
     }
 
     modifier onlyCopyrightOwner(uint256 creatorId, uint256 tokenId) {
         require(
-            IERC721(copyrightTokenContract).ownerOf(tokenId) == getTokenBoundAccountAddress(
-                creatorId,
-                creatorTokenContract
-            ),
+            IERC721(copyrightTokenContract).ownerOf(tokenId) ==
+                getTokenBoundAccountAddress(creatorId, creatorTokenContract),
             "Only the owner of the token can call this function"
         );
         _;
@@ -77,4 +98,35 @@ contract LicenseToken is ERC721, Ownable, ReentrancyGuard {
         _;
     }
 
+    function tokenURI(
+        uint256 tokenId
+    ) public view override returns (string memory) {
+        require(
+            _exists(tokenId),
+            "ERC721Metadata: URI query for nonexistent token"
+        );
+        string memory image = licenses[tokenId].imageUrl;
+
+        return
+            string(
+                abi.encodePacked(
+                    "data:application/json;base64,",
+                    Base64.encode(
+                        bytes(
+                            abi.encodePacked(
+                                '{"name":"',
+                                licenses[tokenId].name,
+                                '", "description":"',
+                                licenses[tokenId].desciption,
+                                '", "external_url":"',
+                                licenses[tokenId].detailUrl,
+                                '", "image":"',
+                                image,
+                                '"}'
+                            )
+                        )
+                    )
+                )
+            );
+    }
 }
