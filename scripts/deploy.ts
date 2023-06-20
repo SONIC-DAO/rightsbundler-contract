@@ -3,10 +3,10 @@ import { ethers } from "hardhat";
 async function main() {
 
     // Creator Token Contract
-    // const creatorTokenFactory = await ethers.getContractFactory("CreatorToken");
-    // const creatorTokenContract = await creatorTokenFactory.deploy();
-    // await creatorTokenContract.deployed();
-    // console.log("CreatorToken Contract:", creatorTokenContract.address);
+    const creatorTokenFactory = await ethers.getContractFactory("CreatorToken");
+    const creatorTokenContract = await creatorTokenFactory.deploy();
+    await creatorTokenContract.deployed();
+    console.log("CreatorToken Contract:", creatorTokenContract.address);
 
     // Copyright Token Contract 
     const copyRightTokenFactory = await ethers.getContractFactory("CopyrightToken");
