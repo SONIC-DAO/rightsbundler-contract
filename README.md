@@ -66,6 +66,8 @@ Network: Astar
 
 ## Sample Transactions
 
+![image](https://github.com/SONIC-DAO/rightsbundler-contract/assets/29562675/b72c7951-f18f-4a7a-a0de-64bff91b3d6b)
+
 |  Action  |  Transaction  |
 | ---- | ---- |
 | クリエイターNFT発行 | [0x9259bb7354d7adebb6a26e10d6b1f703ca3243ceacb1c72aadc97ca1ba35279e](https://blockscout.com/astar/tx/0x9259bb7354d7adebb6a26e10d6b1f703ca3243ceacb1c72aadc97ca1ba35279e) |
