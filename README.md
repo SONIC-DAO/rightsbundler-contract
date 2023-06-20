@@ -1,6 +1,8 @@
 # Rights Bundler
 by SONIC DAO
 
+<img width="585" alt="image" src="https://github.com/SONIC-DAO/rightsbundler-contract/assets/29562675/6ed2e928-6877-4b7a-adc3-a274e0d56aee">
+
 ### What it does
 「Rights Bundler」は、ERC6551規格を使用してクリエイターNFT、著作権NFT、および契約NFTを束ね、無形資産の取引と管理を効率化します。権利元NFTの移転時に紐づくNFTも一緒に移転され、無形資産の証明が容易になり、価値が定量化されます。
 
