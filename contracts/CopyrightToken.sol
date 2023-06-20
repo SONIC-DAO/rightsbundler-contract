@@ -4,7 +4,7 @@ pragma solidity ^0.8.18;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/Base64.sol";
 import "./interfaces/IERC6551Registry.sol";
 
 
@@ -16,12 +16,34 @@ contract CopyrightToken is ERC721, Ownable, ReentrancyGuard {
     address public implementationContract;
     address public creatorTokenContract;
 
+    struct Copyright {
+        string name;
+        string desciption;
+        string detailUrl;
+        string imageUrl;
+    }
+
+    mapping (uint256 => Copyright) public copyrights;
+
     constructor() ERC721("CopyrightToken", "CT") {}
 
-    function mint(uint256 creatorId) public onlyCreatorTokenOwner(creatorId) {
+    function mint(
+        uint256 creatorId,
+        string memory _name,
+        string memory _desciption,
+        string memory _detailUrl,
+        string memory _imageUrl
+    ) public onlyCreatorTokenOwner(creatorId) {
         address creatorTokenAddress = getTokenBoundAccountAddress(creatorId, creatorTokenContract);
 
         _mint(creatorTokenAddress, totalSupply);
+
+        copyrights[totalSupply] = Copyright(
+            _name,
+            _desciption,
+            _detailUrl,
+            _imageUrl
+        );
 
         createTokenBoundAccount(totalSupply);
 
@@ -82,6 +104,31 @@ contract CopyrightToken is ERC721, Ownable, ReentrancyGuard {
             tokenId,
             0,
             bytes("")
+        );
+    }
+
+    function tokenURI(uint256 tokenId) public view override returns (string memory) {        
+        require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+        string memory image = copyrights[tokenId].imageUrl;
+
+        return string(
+            abi.encodePacked(
+                "data:application/json;base64,",
+                Base64.encode(
+                    bytes(
+                        abi.encodePacked(
+                            '{"name":"',
+                            copyrights[tokenId].name,
+                            '", "description":"',
+                            copyrights[tokenId].desciption,
+                            '", "external_url":"',
+                            copyrights[tokenId].detailUrl,
+                            '", "image":"',
+                            image,
+                            '"}'
+                        )
+                    )
+                ))
         );
     }
 
